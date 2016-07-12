@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="colourpicker">
+        <div class="colourpicker__existing">
+            <h2>Your Colours</h2>
+            <div id="js-existing-colours">
+                <!-- This will be populated with JS -->
+            </div>
+            <button>Save</button>
+
+        </div>
+        <div class="colourpicker__new utility-hide" id="js-new-colour">
+            <canvas id="myCanvas" width="256" height="256"></canvas>
+            <div class="swatch" id="js-colour-preview"></div>
+            <input type="text" id="js-colour-hex" />
+            <button id="js-colour-submit">Add Colour</button>
+        </div>
+    </div>
+
+    <script>
+        var userColours = [
+            {
+                name: "material",
+                colours: [
+                    "#ffeb3b",
+                    "#4caf50",
+                    "#2196f3"
+                ],
+                editable: true
+            },
+            {
+                name: "dark",
+                colours: [
+                    "#000000",
+                    "#522929",
+                    "#2b4f65"
+                ],
+                editable: true
+            },
+            {
+                name: "summer",
+                colours: [
+                    "#e0c14f",
+                    "#eeffdd",
+                    "#e1f2d3"
+                ],
+                editable: true
+            }
+        ]
+    </script>
+    <script src="colourpicker.js"></script>
+
+</body>
+</html>
