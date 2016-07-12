@@ -160,8 +160,6 @@ var colourPicker = function(buttons){
             // set initial colour
             colourGradientSelect.updatePreview('white');
 
-
-
             //
             // Get the picker value on submit
             var saveButton = document.getElementById('js-colour-submit');
@@ -233,7 +231,7 @@ var colourPicker = function(buttons){
         }
     };
 
-    var init = function(button){
+    this.init = function(button){
 
         //
         // Initial setup
@@ -275,10 +273,12 @@ var colourPicker = function(buttons){
     };
 
 
+    var _this = this;
+
     // Run onclick. see 'buttons' parameter
     for(var i=0; i < buttons.length; i++){
         buttons[i].addEventListener('click', function(){
-            init(this);
+            _this.init(this);
         });
     }
 
