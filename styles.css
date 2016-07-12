@@ -10,9 +10,6 @@ body {
     list-style-type: none;
 }
 
-.utility-hide {
-    display: none;
-}
 
 h1, h2, h3, h4, h5, h6 {
     margin-top: 0;
@@ -20,12 +17,17 @@ h1, h2, h3, h4, h5, h6 {
 
 
 .colourpicker {
+    display: none;
     background: white;
     border-radius: 4px;
     box-shadow: 0 0 4px grey;
     max-width: 300px;
     margin: auto;
     position: relative;
+}
+
+.colourpicker--open {
+    display: block;        
 }
 
 .colourpicker__existing {
@@ -40,6 +42,10 @@ h1, h2, h3, h4, h5, h6 {
     right: 0;
     bottom: 0;
 }
+.colourpicker__new--hidden {
+    display: none;
+}
+
 
 .swatch,
 .palette__list button {
@@ -51,11 +57,18 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 3em;
     cursor: pointer;
 }
+.palette__list button:focus {
+    outline: none;
+}
 
 .swatch.swatch--selected {
     border-color: black;
 }
-
+.swatch.swatch--selected:before {
+    content: "\2714";
+    color: white;
+    font-size: 40px;
+}
 
 .palette {
     position: relative;
