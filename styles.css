@@ -21,13 +21,13 @@ h1, h2, h3, h4, h5, h6 {
     background: white;
     border-radius: 4px;
     box-shadow: 0 0 4px grey;
-    max-width: 300px;
+    max-width: 330px;
     margin: auto;
     position: relative;
 }
 
 .colourpicker--open {
-    display: block;        
+    display: block;
 }
 
 .colourpicker__existing {
@@ -54,8 +54,8 @@ h1, h2, h3, h4, h5, h6 {
     height: 50px;
     border: 2px solid transparent;
     border-radius: 100%;
-    font-size: 3em;
     cursor: pointer;
+    position: relative;
 }
 .palette__list button:focus {
     outline: none;
@@ -67,7 +67,16 @@ h1, h2, h3, h4, h5, h6 {
 .swatch.swatch--selected:before {
     content: "\2714";
     color: white;
+}
+
+.swatch.swatch--selected:before,
+.palette__list button span {
     font-size: 40px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
 }
 
 .palette {

@@ -130,7 +130,7 @@ var colourPicker = function(buttons){
                     markup += '<button class="swatch" data-colour="'+ pallete.colours[j] + '" style="background: '+ pallete.colours[j] + ';"></button>';
                     markup += '</li>';
                 }
-                markup += '<li><button class="js-add-new-button" data-pallete="'+ pallete.name +'" data-tooltip="Add New Colour">+</button></li>';
+                markup += '<li><button class="js-add-new-button" data-pallete="'+ pallete.name +'" data-tooltip="Add New Colour"><span>+</span></button></li>';
                 markup += '</ul>';
                 markup += '</div>';
             }
@@ -193,6 +193,8 @@ var colourPicker = function(buttons){
 
             // set selected state
             setSelectedState(newColour);
+            // allow other colours to be selected
+            this.select();
 
             // remove the event listener so we can use it again next time without adding this colour agains
             var saveButton = document.getElementById('js-colour-submit');
@@ -212,17 +214,25 @@ var colourPicker = function(buttons){
 
                 swatch[i].addEventListener('click', function() {
 
-                    setSelectedState(this.dataset.colour);
+                    setSelectedState(this);
 
                 }, false);
             }
         }
     };
 
+    // Add selected state class for the CSS
     var setSelectedState = function(colour){
-        // Add selected state class for the CSS
         var currentSwatch = document.getElementsByClassName('swatch--selected')[0];
-        var newSwatch = document.querySelectorAll('[data-colour="'+ colour +'"')[0];
+        var newSwatch;
+
+        if( typeof colour == 'string'){
+            newSwatch = document.querySelectorAll('[data-colour="'+ colour +'"')[0];
+        }
+        else {
+            newSwatch = colour;
+        }
+
         if(currentSwatch){
             currentSwatch.classList.remove('swatch--selected');
         }
