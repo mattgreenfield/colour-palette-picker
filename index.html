@@ -20,11 +20,12 @@
             <button id="js-colour-confirm">Save</button>
 
         </div>
-        <div class="colourpicker__new colourpicker__new--hidden" id="js-new-colour">
+        <div class="colourpicker__new colourpicker__new--hidden" id="js-colourpicker-new">
             <canvas id="myCanvas" width="256" height="256"></canvas>
             <div class="swatch" id="js-colour-preview"></div>
             <input type="text" id="js-colour-hex" />
-            <button id="js-colour-submit">Add Colour</button>
+            <button id="js-colourpicker-new-submit">Add Colour</button>
+            <button id="js-colourpicker-new-cancel">Cancel</button>
         </div>
     </div>
 
@@ -71,8 +72,14 @@
     <script src="colourpicker.js"></script>
 
     <script>
-        var swatches = document.getElementsByClassName('js-open-picker');
-        colourPicker(swatches);
+        var buttons = document.getElementsByClassName('js-open-picker');
+        for(var i=0; i < buttons.length; i++){
+            buttons[i].addEventListener('click', function(){
+                colourPicker(this, function(hex) {
+				    console.log("You set it to be " + hex)
+			    });
+            });
+        }
     </script>
 
 </body>

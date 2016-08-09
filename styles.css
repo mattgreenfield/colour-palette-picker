@@ -61,15 +61,17 @@ h1, h2, h3, h4, h5, h6 {
     outline: none;
 }
 
-.swatch.swatch--selected {
+
+
+input:checked + .swatch {
     border-color: black;
 }
-.swatch.swatch--selected:before {
+input:checked + .swatch:before {
     content: "\2714";
     color: white;
 }
 
-.swatch.swatch--selected:before,
+input:checked + .swatch:before,
 .palette__list button span {
     font-size: 40px;
     position: absolute;

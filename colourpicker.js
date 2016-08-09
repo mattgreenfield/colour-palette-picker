@@ -8,8 +8,11 @@ function removeEventListener(element){
 }
 
 
-
-var colourPicker = function(buttons){
+/**
+ * @param element: ID of the small preview div that you want to set the bg colour of when the user says 'yes, use this colour'.
+ * @param callback: Function that'll be run when the user chooses a colour
+ */
+var colourPicker = function(element, callback){
 
     var colourGradientSelect = {
 
@@ -112,22 +115,32 @@ var colourPicker = function(buttons){
     // Loop throught the userColours array and populate the palletes, add to the array
     var colourPalletes = {
 
+        newColorPicker: document.getElementById('js-colourpicker-new'),
+        saveButton: document.getElementById('js-colourpicker-new-submit'),
+        cancelButton: document.getElementById('js-colourpicker-new-cancel'),
+
+        palletesContainer: document.getElementById('js-existing-colours'),
+        newColourButton: document.getElementsByClassName('js-add-new-button'),
+
+        editPalleteButton: document.getElementsByClassName('js-edit-pallete'),
+
         populate: function(){
             var _this = this;
-            var palletesContainer = document.getElementById('js-existing-colours');
-            var markup = '';
             // console.log(userColours);
 
             // loop through each pallete and create the markup
+            var markup = '';
             for( var i = 0; i < userColours.length; i++ ){
                 var pallete = userColours[i];
 
                 markup += '<div class="palette">';
                 markup += '<h3>'+ pallete.name +'</h3>';
+                markup += '<button class="js-edit-pallete" data-pallete="'+ pallete.name +'">Edit Pallete</button>';
                 markup += '<ul class="palette__list reset-list">';
                 for( var j = 0; j < pallete.colours.length; j++ ){
                     markup += '<li>';
-                    markup += '<button class="swatch" data-colour="'+ pallete.colours[j] + '" style="background: '+ pallete.colours[j] + ';"></button>';
+                    markup += '<input type="radio" name="colours" id="'+ [i] + pallete.colours[j] + '" value="'+ pallete.colours[j] + '" aria-hidden="true" style="display:none"/>';
+                    markup += '<label class="swatch" for="'+ [i] + pallete.colours[j] + '" data-colour="'+ pallete.colours[j] + '" style="background: '+ pallete.colours[j] + ';"></label>';
                     markup += '</li>';
                 }
                 markup += '<li><button class="js-add-new-button" data-pallete="'+ pallete.name +'" data-tooltip="Add New Colour"><span>+</span></button></li>';
@@ -136,15 +149,23 @@ var colourPicker = function(buttons){
             }
 
             // Add the markup to the page
-            palletesContainer.innerHTML = markup;
+            _this.palletesContainer.innerHTML = markup;
 
             // Add event listers to the "Add colour" buttons
-            var newColourButton = document.getElementsByClassName('js-add-new-button');
-            for( var i = 0; i < newColourButton.length; i++ ){
-                newColourButton[i].addEventListener('click', function(){
+            for( var i = 0; i < _this.newColourButton.length; i++ ){
+                _this.newColourButton[i].addEventListener('click', function(){
                     var palette = this.dataset.pallete;
-                    console.log(palette);
+                    console.log("add new colour to " + palette);
                     _this.addNewOpen(palette);
+                });
+            }
+
+            // Add event listers to the "Edit pallete" buttons
+            for( var i = 0; i < _this.editPalleteButton.length; i++ ){
+                _this.editPalleteButton[i].addEventListener('click', function(){
+                    var palette = this.dataset.pallete;
+                    console.log("Editing " + palette);
+                    _this.editPalette(palette);
                 });
             }
         },
@@ -155,17 +176,19 @@ var colourPicker = function(buttons){
 
             //
             // open the colour picker
-            var newColorPicker = document.getElementById('js-new-colour');
-            newColorPicker.classList.remove('colourpicker__new--hidden');
+            _this.newColorPicker.classList.remove('colourpicker__new--hidden');
             // set initial colour
             colourGradientSelect.updatePreview('white');
 
             //
             // Get the picker value on submit
-            var saveButton = document.getElementById('js-colour-submit');
-            saveButton.addEventListener('click', function() {
+            _this.saveButton.addEventListener('click', function() {
                 console.log("submitting to " + palette);
                 _this.addNewSave(palette);
+            }, false);
+
+            _this.cancelButton.addEventListener('click', function() {
+                _this.newColorPicker.classList.add('colourpicker__new--hidden');
             }, false);
 
         },
@@ -192,56 +215,26 @@ var colourPicker = function(buttons){
             this.populate();
 
             // set selected state
-            setSelectedState(newColour);
-            // allow other colours to be selected
-            this.select();
+            document.querySelectorAll("input[value="+ newColour +"]")[0].checked = true;
+
 
             // remove the event listener so we can use it again next time without adding this colour agains
-            var saveButton = document.getElementById('js-colour-submit');
-            removeEventListener(saveButton);
+            removeEventListener(this.saveButton);
 
             //
             // Close the colour picker
-            var newColorPicker = document.getElementById('js-new-colour');
-            newColorPicker.classList.add('colourpicker__new--hidden');
+            this.newColorPicker.classList.add('colourpicker__new--hidden');
 
         },
 
-        // Handle when an existing colour is selected
-        select: function(){
-            var swatch = document.getElementsByClassName('swatch');
-            for(var i=0; i < swatch.length; i++){
+        editPalette: function(palette){
 
-                swatch[i].addEventListener('click', function() {
+        },
 
-                    setSelectedState(this);
-
-                }, false);
-            }
-        }
     };
 
-    // Add selected state class for the CSS
-    var setSelectedState = function(colour){
-        var currentSwatch = document.getElementsByClassName('swatch--selected')[0];
-        var newSwatch;
 
-        if( typeof colour == 'string'){
-            newSwatch = document.querySelectorAll('[data-colour="'+ colour +'"')[0];
-        }
-        else {
-            newSwatch = colour;
-        }
-
-        if(currentSwatch){
-            currentSwatch.classList.remove('swatch--selected');
-        }
-        if( newSwatch != currentSwatch){
-            newSwatch.classList.add('swatch--selected');
-        }
-    };
-
-    this.init = function(button){
+    var init = function(element){
 
         //
         // Initial setup
@@ -258,13 +251,11 @@ var colourPicker = function(buttons){
         // Populate the palletes lists
         colourPalletes.populate();
 
-        // Handle selecting existing colours
-        colourPalletes.select();
 
         // Set the 'current' state on the current colour swatch
-        var currentColour = button.dataset.currentColor;
-        var currentColourSwatch = document.querySelectorAll('.swatch[data-colour="'+currentColour+'"]')[0];
-        currentColourSwatch.classList.add('swatch--selected');
+        var currentColour = element.dataset.currentColor;
+        var currentColourSwatch = document.querySelectorAll('input[value="'+currentColour+'"]')[0];
+        currentColourSwatch.checked = true;
 
         // Display the picker
         var colourPickerEl = document.getElementById('js-colourpicker');
@@ -273,25 +264,25 @@ var colourPicker = function(buttons){
         // Handle saving
         var saveButton = document.getElementById('js-colour-confirm');
         saveButton.addEventListener('click', function(){
-            var selectedColour = document.getElementsByClassName('swatch--selected')[0].dataset.colour;
-            button.dataset.currentColor = selectedColour;
-            button.style.background = selectedColour;
+            // get the selected colour
+            var selectedColour = document.querySelector('input[name="colours"]:checked').value;
+
+            // update the preview / swatch element
+            element.dataset.currentColor = selectedColour;
+            element.style.background = selectedColour;
+
+            // close the picker
             colourPickerEl.classList.remove('colourpicker--open');
             removeEventListener(this);
             // return selectedColour;
+
+            // Callback
+            if(typeof callback == 'function') {
+                callback(selectedColour);
+            }
         });
     };
 
-
-    var _this = this;
-
-    // Run onclick. see 'buttons' parameter
-    for(var i=0; i < buttons.length; i++){
-        buttons[i].addEventListener('click', function(){
-            _this.init(this);
-        });
-    }
-
-
+    init(element);
 
 }
