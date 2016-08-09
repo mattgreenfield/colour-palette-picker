@@ -75,9 +75,11 @@
         var buttons = document.getElementsByClassName('js-open-picker');
         for(var i=0; i < buttons.length; i++){
             buttons[i].addEventListener('click', function(){
+
                 colourPicker(this, function(hex) {
 				    console.log("You set it to be " + hex)
 			    });
+
             });
         }
     </script>

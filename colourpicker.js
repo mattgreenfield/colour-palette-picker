@@ -133,7 +133,7 @@ var colourPicker = function(element, callback){
             for( var i = 0; i < userColours.length; i++ ){
                 var pallete = userColours[i];
 
-                markup += '<div class="palette">';
+                markup += '<div class="palette" data-palette="'+ pallete.name +'">';
                 markup += '<h3>'+ pallete.name +'</h3>';
                 markup += '<button class="js-edit-pallete" data-pallete="'+ pallete.name +'">Edit Pallete</button>';
                 markup += '<ul class="palette__list reset-list">';
@@ -198,7 +198,7 @@ var colourPicker = function(element, callback){
             console.log("saving to " + palette);
             // console.log(palette);
 
-            // Loop through the usercolours array untill we find the one we need to add to
+            // Loop through the usercolours array untill we find the palette we need to add to
             // TODO: use a different data structure??
             for( var i = 0; i < userColours.length; i++ ){
                 if( userColours[i].name == palette ){
@@ -228,6 +228,51 @@ var colourPicker = function(element, callback){
         },
 
         editPalette: function(palette){
+
+            var _this = this;
+
+            // Add "editing" CSS
+            var paletteToEdit = document.querySelectorAll(".palette[data-palette=" + palette + "]")[0];
+            paletteToEdit.classList.add('palette--editing');
+
+            // When a colour is selected remove is from the userColours array
+            var colours = paletteToEdit.querySelectorAll(".swatch");
+            for( var i = 0; i < colours.length; i++ ){
+                colours[i].addEventListener("click", deleteThisColour);
+            }
+            function deleteThisColour(){
+
+                console.log("deleting");
+
+                var colorToDelete = this.dataset.colour;
+
+                // Loop through the usercolours array untill we find the palette we need to edit
+                for( var j = 0; j < userColours.length; j++ ){
+                    if( userColours[j].name == palette ){
+
+                        // Remove the selected colours from the array
+                        var paletteArray = userColours[j].colours;
+                        var index = paletteArray.indexOf(colorToDelete);
+                        if(index != -1) {
+                            paletteArray.splice(index, 1);
+                        }
+                        break;
+                    }
+                }
+
+                this.removeEventListener("click", deleteThisColour);
+
+                // Refresh the colours list
+                _this.populate();
+
+                paletteToEdit.classList.remove('palette--editing');
+            }
+
+            // Handle toggling of the "edit" button
+            // this.addEventListener("click", function(){
+            //     paletteToEdit.classList.remove('palette--editing');
+            // });
+
 
         },
 

@@ -95,3 +95,7 @@ input:checked + .swatch:before,
     padding-left: 10px;
     padding-bottom: 10px;
 }
+
+.palette--editing {
+    background: red;
+}
