@@ -66,15 +66,17 @@ h3 {
     outline: none;
 }
 
-.swatch.swatch--selected {
+
+
+input:checked + .swatch {
     border-color: black;
 }
-.swatch.swatch--selected:before {
+input:checked + .swatch:before {
     content: "\2714";
     color: white;
 }
 
-.swatch.swatch--selected:before,
+input:checked + .swatch:before,
 .palette__list button span {
     font-size: 40px;
     position: absolute;
@@ -99,12 +101,15 @@ h3 {
     padding-bottom: 10px;
 }
 
-
 .btn {
-    background: #4caf50;
+    /*background: #4caf50;*/
     border: none;
     box-shadow: 2px 2px 2px #cacaca;
     padding: .4em 1em;
     font-size: 1em;
     border-radius: 2px;
+}
+
+.palette--editing {
+    background: red;
 }
